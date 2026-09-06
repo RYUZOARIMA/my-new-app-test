@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { appendBooking, getBookingsForMonth } from "@/lib/googleSheets";
+import { sendBookingNotification } from "@/lib/notifyEmail";
 import { BOOTHS, isClosedDay } from "@/lib/galleryData";
 import type { BoothId } from "@/lib/galleryData";
 
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
       contact: contact.trim(),
       note: note?.trim() ?? "",
     });
+    await sendBookingNotification(booking);
     return NextResponse.json({ booking }, { status: 201 });
   } catch (error) {
     console.error(error);

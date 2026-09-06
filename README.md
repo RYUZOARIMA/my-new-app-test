@@ -28,10 +28,22 @@ Googleスプレッドシートの環境変数(下記)を設定していない場
    - `GOOGLE_PRIVATE_KEY`: JSON鍵内の `private_key`(改行は `\n` のまま貼り付けでOK)
    - `GOOGLE_SHEET_ID`: スプレッドシートのURL中のID部分
 
+## 予約通知メールのセットアップ(任意)
+
+新規予約が入るたびに `nipponbudomiyazaki@gmail.com` へ通知メールを送信します。[Resend](https://resend.com) を利用します。
+
+1. [resend.com](https://resend.com) でアカウントを作成する
+2. ダッシュボードでAPIキーを発行する
+3. `.env.local` に以下を設定:
+   - `RESEND_API_KEY`: 発行したAPIキー
+   - `RESEND_FROM_EMAIL`: 送信元アドレス。独自ドメインをResendで認証していない場合は `onboarding@resend.dev` のままでOK(Resendアカウントのオーナーのメールアドレス宛にのみ届く制限あり。本番運用では独自ドメインの認証を推奨)
+
+`RESEND_API_KEY` が未設定の場合、予約自体はスプレッドシートに保存されますが通知メールは送信されず、サーバーログにエラーが記録されるだけです(予約処理自体は失敗しません)。
+
 ## Vercelへのデプロイ
 
 1. GitHubリポジトリにpushするか、`vercel` CLIで直接リンクする
-2. Vercelプロジェクトの環境変数に上記3つ(`GOOGLE_SERVICE_ACCOUNT_EMAIL` / `GOOGLE_PRIVATE_KEY` / `GOOGLE_SHEET_ID`)を登録する
+2. Vercelプロジェクトの環境変数に上記(`GOOGLE_SERVICE_ACCOUNT_EMAIL` / `GOOGLE_PRIVATE_KEY` / `GOOGLE_SHEET_ID` / `RESEND_API_KEY` / `RESEND_FROM_EMAIL`)を登録する
 3. `vercel --prod` またはGitHub連携での自動デプロイを実行する
 
 ## 構成
@@ -40,4 +52,5 @@ Googleスプレッドシートの環境変数(下記)を設定していない場
 - `app/booking/page.tsx` + `components/BookingClient.tsx` — 予約カレンダー・申込フォーム
 - `app/api/bookings/route.ts` — 予約の取得(GET)・仮予約の追加(POST)
 - `lib/googleSheets.ts` — Googleスプレッドシート読み書き
+- `lib/notifyEmail.ts` — 予約通知メール送信(Resend)
 - `lib/galleryData.ts` — ブース仕様・料金・ギャラリー基本情報
