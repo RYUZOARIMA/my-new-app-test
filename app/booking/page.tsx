@@ -1,4 +1,5 @@
 import BookingClient from "@/components/BookingClient";
+import FloorPlan from "@/components/FloorPlan";
 import SectionHeading from "@/components/SectionHeading";
 import { getBookingsForMonth } from "@/lib/googleSheets";
 
@@ -38,6 +39,11 @@ export default async function BookingPage() {
         initialBookings={bookings}
         initialError={error}
       />
+
+      <div>
+        <SectionHeading eyebrow="FLOOR PLAN" title="フロア配置" />
+        <FloorPlan />
+      </div>
     </div>
   );
 }
