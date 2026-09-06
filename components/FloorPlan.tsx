@@ -100,16 +100,16 @@ export default function FloorPlan() {
           ショーウインド
         </text>
 
-        {/* Front row: A, B near the show windows */}
-        <Booth id="A" x={70} y={64} w={150} h={90} />
-        <Booth id="B" x={420} y={64} w={130} h={90} />
+        {/* Front row: B, A near the show windows */}
+        <Booth id="B" x={70} y={64} w={150} h={90} />
+        <Booth id="A" x={420} y={64} w={130} h={90} />
         <Pillar x={230} y={100} />
         <Pillar x={400} y={100} />
 
-        {/* Middle row: E (left wall), C (center), D (right wall) */}
-        <Booth id="E" x={70} y={168} w={110} h={100} />
+        {/* Middle row: D (left wall), C (center), E (right wall) */}
+        <Booth id="D" x={70} y={168} w={110} h={100} />
         <Booth id="C" x={255} y={168} w={130} h={100} />
-        <Booth id="D" x={460} y={168} w={110} h={100} />
+        <Booth id="E" x={460} y={168} w={110} h={100} />
 
         {/* Wall display strip along the right wall */}
         <rect
