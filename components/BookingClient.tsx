@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { isClosedDay } from "@/lib/galleryData";
 import type { BoothId } from "@/lib/galleryData";
 import MonthCalendar, { ALL_BOOTH_IDS, buildMonthDays } from "./MonthCalendar";
@@ -14,23 +14,36 @@ type Booking = {
   status: "仮予約" | "確定" | "却下";
 };
 
-function startingYearMonth() {
-  const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth() + 1 };
-}
+type Props = {
+  initialYear: number;
+  initialMonth: number;
+  initialBookings: Booking[];
+  initialError: string | null;
+};
 
-export default function BookingClient() {
-  const [{ year, month }, setYearMonth] = useState(startingYearMonth);
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+export default function BookingClient({
+  initialYear,
+  initialMonth,
+  initialBookings,
+  initialError,
+}: Props) {
+  const [{ year, month }, setYearMonth] = useState({
+    year: initialYear,
+    month: initialMonth,
+  });
+  const [bookings, setBookings] = useState<Booking[]>(initialBookings);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(initialError);
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
 
-  const loadBookings = useCallback(async () => {
+  // Fetches for a given month. Always called from an event handler (month
+  // navigation, or after a successful booking submission) — never from an
+  // effect — since the initial month's data is rendered on the server.
+  const loadBookings = useCallback(async (y: number, m: number) => {
     setLoading(true);
     setLoadError(null);
     try {
-      const res = await fetch(`/api/bookings?year=${year}&month=${month}`);
+      const res = await fetch(`/api/bookings?year=${y}&month=${m}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "取得に失敗しました");
       setBookings(data.bookings ?? []);
@@ -41,11 +54,7 @@ export default function BookingClient() {
     } finally {
       setLoading(false);
     }
-  }, [year, month]);
-
-  useEffect(() => {
-    loadBookings();
-  }, [loadBookings]);
+  }, []);
 
   const statusesByDate = useMemo(() => {
     const map = new Map<string, Record<BoothId, BoothStatus>>();
@@ -82,10 +91,11 @@ export default function BookingClient() {
 
   function goToMonth(delta: number) {
     setSelectedDateKey(null);
-    setYearMonth(({ year, month }) => {
-      const base = new Date(year, month - 1 + delta, 1);
-      return { year: base.getFullYear(), month: base.getMonth() + 1 };
-    });
+    const base = new Date(year, month - 1 + delta, 1);
+    const nextYear = base.getFullYear();
+    const nextMonth = base.getMonth() + 1;
+    setYearMonth({ year: nextYear, month: nextMonth });
+    loadBookings(nextYear, nextMonth);
   }
 
   return (
@@ -115,7 +125,7 @@ export default function BookingClient() {
           <BookingForm
             dateKey={selectedDateKey}
             statuses={statusesForDate(selectedDateKey)}
-            onSubmitted={loadBookings}
+            onSubmitted={() => loadBookings(year, month)}
           />
         ) : (
           <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-[color:var(--color-border)] p-8 text-center text-sm text-[color:var(--color-ink-soft)]">
