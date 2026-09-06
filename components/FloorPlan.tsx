@@ -150,21 +150,21 @@ export default function FloorPlan() {
         </text>
 
         <rect
-          x={460}
-          y={310}
-          width={80}
-          height={30}
+          x={530}
+          y={278}
+          width={35}
+          height={60}
           rx={4}
           fill="none"
           stroke="var(--color-ink-soft)"
           strokeDasharray="3 3"
         />
-        <text x={500} y={329} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
+        <text x={547} y={312} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
           階段
         </text>
 
-        <rect x={430} y={350} width={150} height={16} fill="var(--color-gold, #a97a26)" opacity={0.3} />
-        <text x={505} y={362} textAnchor="middle" fontSize={8} fill="var(--color-ink-soft)">
+        <rect x={430} y={340} width={150} height={16} fill="var(--color-gold, #a97a26)" opacity={0.3} />
+        <text x={505} y={352} textAnchor="middle" fontSize={8} fill="var(--color-ink-soft)">
           140cm高さの飾り台
         </text>
       </svg>
