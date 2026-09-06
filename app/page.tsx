@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PriceTable from "@/components/PriceTable";
+import FloorPlan from "@/components/FloorPlan";
 import SectionHeading from "@/components/SectionHeading";
 import { GALLERY_INFO } from "@/lib/galleryData";
 
@@ -129,6 +130,11 @@ export default function Home() {
               </span>
             ))}
           </div>
+        </div>
+
+        <div>
+          <SectionHeading eyebrow="FLOOR PLAN" title="フロア配置" />
+          <FloorPlan />
         </div>
 
         <div>
