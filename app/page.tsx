@@ -1,6 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 import PriceTable from "@/components/PriceTable";
 import { GALLERY_INFO } from "@/lib/galleryData";
+
+const INTERIOR_PHOTOS = [
+  { src: "/gallery/interior-1.jpg", alt: "ギャラリー内観1" },
+  { src: "/gallery/interior-2.jpg", alt: "ギャラリー内観2(壁面)" },
+  { src: "/gallery/interior-3.jpg", alt: "ギャラリー内観3(階段側)" },
+];
 
 export default function Home() {
   return (
@@ -32,6 +39,38 @@ export default function Home() {
       </section>
 
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-12">
+        <div>
+          <h2 className="mb-3 font-serif text-xl text-[color:var(--color-indigo-deep)]">
+            店舗写真
+          </h2>
+          <div className="overflow-hidden rounded-lg border border-[color:var(--color-border)]">
+            <Image
+              src="/gallery/storefront.jpg"
+              alt="士道 SHIDO Gallery Paris 外観"
+              width={1600}
+              height={900}
+              className="h-auto w-full object-cover"
+              priority
+            />
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-3">
+            {INTERIOR_PHOTOS.map((photo) => (
+              <div
+                key={photo.src}
+                className="overflow-hidden rounded-lg border border-[color:var(--color-border)]"
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  width={600}
+                  height={450}
+                  className="h-auto w-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="grid gap-8 sm:grid-cols-2">
           <div>
             <h2 className="mb-3 font-serif text-xl text-[color:var(--color-indigo-deep)]">
