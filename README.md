@@ -2,6 +2,8 @@
 
 日本武道宮崎パリ支店のギャラリースペース「士道 SHIDO Gallery Paris」の展示ブース(A〜F)予約・空き状況確認サイト。
 
+日常の予約対応(確定・却下の判断、通知メールの見方など)は [docs/booking-manual.md](docs/booking-manual.md) を参照してください。
+
 ## 開発環境で動かす
 
 ```bash
