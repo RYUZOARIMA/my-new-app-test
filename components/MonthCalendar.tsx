@@ -92,7 +92,7 @@ export default function MonthCalendar({
                   ? "cursor-not-allowed text-[color:var(--color-ink-soft)]/50"
                   : "cursor-pointer hover:bg-[color:var(--color-paper)]",
                 isSelected
-                  ? "ring-2 ring-[color:var(--color-gold)] bg-[color:var(--color-paper)]"
+                  ? "ring-2 ring-[color:var(--color-red)] bg-[color:var(--color-paper)]"
                   : "",
               ].join(" ")}
             >

@@ -90,7 +90,7 @@ export default function BookingForm({ dateKey, statuses, onSubmitted }: Props) {
                   isConfirmed
                     ? "cursor-not-allowed border-[color:var(--color-border)] opacity-50"
                     : booth === b.id
-                    ? "border-[color:var(--color-gold)] bg-[color:var(--color-paper)]"
+                    ? "border-[color:var(--color-red)] bg-[color:var(--color-paper)]"
                     : "border-[color:var(--color-border)]",
                 ].join(" ")}
               >

@@ -5,9 +5,17 @@ import { GALLERY_INFO } from "@/lib/galleryData";
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
+      <div
+        className="flex h-1.5 w-full"
+        aria-hidden="true"
+      >
+        <div className="flex-1 bg-[color:var(--color-indigo-deep)]" />
+        <div className="flex-1 bg-white" />
+        <div className="flex-1 bg-[color:var(--color-red)]" />
+      </div>
       <section className="bg-[color:var(--color-indigo-deep)] text-[color:var(--color-paper)]">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-6 py-16">
-          <p className="text-sm tracking-wide text-[color:var(--color-gold)]">
+          <p className="text-sm tracking-wide text-[color:var(--color-paper)]/70">
             {GALLERY_INFO.operator}
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl">{GALLERY_INFO.name}</h1>
@@ -16,7 +24,7 @@ export default function Home() {
           </p>
           <Link
             href="/booking"
-            className="mt-2 inline-block w-fit rounded-md bg-[color:var(--color-gold)] px-5 py-2.5 text-sm font-medium text-[color:var(--color-indigo-deep)] transition-opacity hover:opacity-90"
+            className="mt-2 inline-block w-fit rounded-md bg-[color:var(--color-red)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             空き状況を見る・予約する
           </Link>
