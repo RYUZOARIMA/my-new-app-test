@@ -44,16 +44,7 @@ export default function Home() {
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-6 py-16">
         <div>
           <SectionHeading eyebrow="GALLERY" title="店舗写真" />
-          <div className="overflow-hidden rounded-lg border border-[color:var(--color-border)] shadow-sm">
-            <Image
-              src="/gallery/storefront.jpg"
-              alt="士道 SHIDO Gallery Paris 外観"
-              width={1600}
-              height={900}
-              className="h-auto w-full object-cover"
-            />
-          </div>
-          <div className="mt-3 grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {INTERIOR_PHOTOS.map((photo) => (
               <div
                 key={photo.src}
