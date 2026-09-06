@@ -132,29 +132,30 @@ export default function FloorPlan() {
           壁面ディスプレイ
         </text>
 
-        {/* Back row: F + 140cm display shelf, support desk, stairs */}
+        {/* Back row: F, support desk (left, under E), 140cm display shelf + stairs (right, under D) */}
         <Booth id="F" x={255} y={290} w={130} h={60} />
-        <rect x={70} y={310} width={150} height={16} fill="var(--color-gold, #a97a26)" opacity={0.3} />
-        <text x={145} y={322} textAnchor="middle" fontSize={8} fill="var(--color-ink-soft)">
-          140cm高さの飾り台
-        </text>
 
         <rect
-          x={430}
-          y={290}
-          width={90}
+          x={70}
+          y={300}
+          width={110}
           height={40}
           rx={4}
           fill="none"
           stroke="var(--color-ink-soft)"
           strokeDasharray="3 3"
         />
-        <text x={475} y={313} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
+        <text x={125} y={323} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
           サポートデスク
         </text>
 
+        <rect x={430} y={310} width={150} height={16} fill="var(--color-gold, #a97a26)" opacity={0.3} />
+        <text x={505} y={322} textAnchor="middle" fontSize={8} fill="var(--color-ink-soft)">
+          140cm高さの飾り台
+        </text>
+
         <rect
-          x={70}
+          x={460}
           y={350}
           width={80}
           height={30}
@@ -163,7 +164,7 @@ export default function FloorPlan() {
           stroke="var(--color-ink-soft)"
           strokeDasharray="3 3"
         />
-        <text x={110} y={369} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
+        <text x={500} y={369} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
           階段
         </text>
       </svg>
