@@ -149,14 +149,9 @@ export default function FloorPlan() {
           サポートデスク
         </text>
 
-        <rect x={430} y={310} width={150} height={16} fill="var(--color-gold, #a97a26)" opacity={0.3} />
-        <text x={505} y={322} textAnchor="middle" fontSize={8} fill="var(--color-ink-soft)">
-          140cm高さの飾り台
-        </text>
-
         <rect
           x={460}
-          y={350}
+          y={310}
           width={80}
           height={30}
           rx={4}
@@ -164,8 +159,13 @@ export default function FloorPlan() {
           stroke="var(--color-ink-soft)"
           strokeDasharray="3 3"
         />
-        <text x={500} y={369} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
+        <text x={500} y={329} textAnchor="middle" fontSize={9} fill="var(--color-ink-soft)">
           階段
+        </text>
+
+        <rect x={430} y={350} width={150} height={16} fill="var(--color-gold, #a97a26)" opacity={0.3} />
+        <text x={505} y={362} textAnchor="middle" fontSize={8} fill="var(--color-ink-soft)">
+          140cm高さの飾り台
         </text>
       </svg>
       <p className="mt-2 text-center text-xs text-[color:var(--color-ink-soft)]">
