@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         name: metadata.name,
         contact: metadata.contact,
         note: metadata.note ?? "",
-        amount: Number(metadata.amount) || 0,
+        amount: session.amount_total != null ? session.amount_total / 100 : Number(metadata.amount) || 0,
         stripeSessionId: session.id,
       });
       await sendBookingNotification(booking);

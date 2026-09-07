@@ -23,6 +23,7 @@ export async function sendBookingNotification(booking: Booking) {
       text: [
         "新しい予約申込みがありました。",
         "",
+        `申請番号: 第${booking.number}件目`,
         `希望日: ${booking.date}`,
         `ブース: ${booking.booth}`,
         `氏名: ${booking.name}`,
