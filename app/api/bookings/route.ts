@@ -51,6 +51,12 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.trim())) {
+    return NextResponse.json(
+      { error: "メールアドレスの形式が正しくありません" },
+      { status: 400 }
+    );
+  }
   if (isClosedDay(new Date(`${date}T00:00:00`))) {
     return NextResponse.json(
       { error: "月曜日は定休日のため予約できません" },

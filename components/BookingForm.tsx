@@ -136,10 +136,11 @@ export default function BookingForm({ dateKey, statuses, onSubmitted }: Props) {
 
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium" htmlFor="contact">
-          連絡先(メールまたは電話)
+          メールアドレス
         </label>
         <input
           id="contact"
+          type="email"
           required
           value={contact}
           onChange={(e) => setContact(e.target.value)}
