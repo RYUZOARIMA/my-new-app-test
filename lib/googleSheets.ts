@@ -11,6 +11,8 @@ const HEADER_ROW = [
   "連絡先",
   "用途備考",
   "ステータス",
+  "金額",
+  "Stripe決済ID",
 ] as const;
 
 export type BookingStatus = "仮予約" | "確定" | "却下";
@@ -24,6 +26,8 @@ export type Booking = {
   contact: string;
   note: string;
   status: BookingStatus;
+  amount: number; // EUR
+  stripeSessionId: string;
 };
 
 function getSheetsClient() {
@@ -52,7 +56,8 @@ function getSpreadsheetId() {
 }
 
 function rowToBooking(row: string[]): Booking | null {
-  const [id, submittedAt, date, booth, name, contact, note, status] = row;
+  const [id, submittedAt, date, booth, name, contact, note, status, amount, stripeSessionId] =
+    row;
   if (!id || !date || !booth) return null;
   return {
     id,
@@ -63,6 +68,8 @@ function rowToBooking(row: string[]): Booking | null {
     contact: contact ?? "",
     note: note ?? "",
     status: (status as BookingStatus) ?? "仮予約",
+    amount: Number(amount) || 0,
+    stripeSessionId: stripeSessionId ?? "",
   };
 }
 
@@ -73,7 +80,7 @@ export async function getBookingsForMonth(
   const sheets = getSheetsClient();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: getSpreadsheetId(),
-    range: `${SHEET_NAME}!A2:H`,
+    range: `${SHEET_NAME}!A2:J`,
   });
 
   const rows = res.data.values ?? [];
@@ -91,6 +98,8 @@ export async function appendBooking(input: {
   name: string;
   contact: string;
   note: string;
+  amount: number;
+  stripeSessionId: string;
 }): Promise<Booking> {
   const sheets = getSheetsClient();
   const spreadsheetId = getSpreadsheetId();
@@ -104,11 +113,13 @@ export async function appendBooking(input: {
     contact: input.contact,
     note: input.note,
     status: "仮予約",
+    amount: input.amount,
+    stripeSessionId: input.stripeSessionId,
   };
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: `${SHEET_NAME}!A:H`,
+    range: `${SHEET_NAME}!A:J`,
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [
@@ -121,6 +132,8 @@ export async function appendBooking(input: {
           booking.contact,
           booking.note,
           booking.status,
+          booking.amount,
+          booking.stripeSessionId,
         ],
       ],
     },

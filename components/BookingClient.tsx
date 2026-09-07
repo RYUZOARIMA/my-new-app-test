@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { isClosedDay } from "@/lib/galleryData";
 import type { BoothId } from "@/lib/galleryData";
 import MonthCalendar, { ALL_BOOTH_IDS, buildMonthDays } from "./MonthCalendar";
@@ -35,6 +35,7 @@ export default function BookingClient({
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(initialError);
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
+  const [paymentBanner, setPaymentBanner] = useState<"success" | "cancelled" | null>(null);
 
   // Fetches for a given month. Always called from an event handler (month
   // navigation, or after a successful booking submission) — never from an
@@ -54,6 +55,24 @@ export default function BookingClient({
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  // Stripe Checkoutから戻ってきた際、URLの ?payment=success|cancelled を見て
+  // バナー表示・空き状況の再取得を行う。初回マウント時のみ実行すればよい。
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get("payment");
+    if (payment === "success" || payment === "cancelled") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing React state from the URL (an external system) on mount, not derived from props/state
+      setPaymentBanner(payment);
+      if (payment === "success") {
+        loadBookings(year, month);
+      }
+      params.delete("payment");
+      const query = params.toString();
+      window.history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const statusesByDate = useMemo(() => {
@@ -99,39 +118,50 @@ export default function BookingClient({
   }
 
   return (
-    <div className="flex flex-col gap-6 md:flex-row">
-      <div className="md:w-1/2">
-        <MonthCalendar
-          year={year}
-          month={month}
-          dayInfos={dayInfos}
-          selectedDateKey={selectedDateKey}
-          onSelectDate={setSelectedDateKey}
-          onPrevMonth={() => goToMonth(-1)}
-          onNextMonth={() => goToMonth(1)}
-        />
-        {loading && (
-          <p className="mt-2 text-xs text-[color:var(--color-ink-soft)]">
-            空き状況を読み込み中...
-          </p>
-        )}
-        {loadError && (
-          <p className="mt-2 text-xs text-rose-600">{loadError}</p>
-        )}
-      </div>
-
-      <div className="md:w-1/2">
-        {selectedDateKey ? (
-          <BookingForm
-            dateKey={selectedDateKey}
-            statuses={statusesForDate(selectedDateKey)}
-            onSubmitted={() => loadBookings(year, month)}
+    <div className="flex flex-col gap-6">
+      {paymentBanner === "success" && (
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+          お支払いが完了し、仮予約を受け付けました。オーナーが内容を確認のうえ、追ってご連絡します。
+        </div>
+      )}
+      {paymentBanner === "cancelled" && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          お支払いがキャンセルされました。予約は確定していません。もう一度お申込みください。
+        </div>
+      )}
+      <div className="flex flex-col gap-6 md:flex-row">
+        <div className="md:w-1/2">
+          <MonthCalendar
+            year={year}
+            month={month}
+            dayInfos={dayInfos}
+            selectedDateKey={selectedDateKey}
+            onSelectDate={setSelectedDateKey}
+            onPrevMonth={() => goToMonth(-1)}
+            onNextMonth={() => goToMonth(1)}
           />
-        ) : (
-          <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-[color:var(--color-border)] p-8 text-center text-sm text-[color:var(--color-ink-soft)]">
-            カレンダーから予約したい日付を選択してください
-          </div>
-        )}
+          {loading && (
+            <p className="mt-2 text-xs text-[color:var(--color-ink-soft)]">
+              空き状況を読み込み中...
+            </p>
+          )}
+          {loadError && (
+            <p className="mt-2 text-xs text-rose-600">{loadError}</p>
+          )}
+        </div>
+
+        <div className="md:w-1/2">
+          {selectedDateKey ? (
+            <BookingForm
+              dateKey={selectedDateKey}
+              statuses={statusesForDate(selectedDateKey)}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-[color:var(--color-border)] p-8 text-center text-sm text-[color:var(--color-ink-soft)]">
+              カレンダーから予約したい日付を選択してください
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

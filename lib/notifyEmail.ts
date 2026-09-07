@@ -29,6 +29,8 @@ export async function sendBookingNotification(booking: Booking) {
         `連絡先: ${booking.contact}`,
         `用途備考: ${booking.note || "(なし)"}`,
         `ステータス: ${booking.status}`,
+        `支払金額: €${booking.amount.toLocaleString()}(Stripeで決済済み)`,
+        `Stripe決済ID: ${booking.stripeSessionId}`,
         `申込日時: ${booking.submittedAt}`,
         `予約ID: ${booking.id}`,
       ].join("\n"),

@@ -9,17 +9,15 @@ import BoothStatusBadge, { type BoothStatus } from "./BoothStatusBadge";
 type Props = {
   dateKey: string;
   statuses: Record<BoothId, BoothStatus>;
-  onSubmitted: () => void;
 };
 
-export default function BookingForm({ dateKey, statuses, onSubmitted }: Props) {
+export default function BookingForm({ dateKey, statuses }: Props) {
   const [booth, setBooth] = useState<BoothId | "">("");
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const date = parseDateKey(dateKey);
 
@@ -32,39 +30,18 @@ export default function BookingForm({ dateKey, statuses, onSubmitted }: Props) {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch("/api/bookings", {
+      const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ date: dateKey, booth, name, contact, note }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "送信に失敗しました");
-      setSuccess(true);
-      setName("");
-      setContact("");
-      setNote("");
-      setBooth("");
-      onSubmitted();
+      window.location.href = data.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : "送信に失敗しました");
-    } finally {
       setSubmitting(false);
     }
-  }
-
-  if (success) {
-    return (
-      <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
-        仮予約のお申込みを受け付けました。オーナーが内容を確認のうえ、追ってご連絡します。
-        <button
-          type="button"
-          onClick={() => setSuccess(false)}
-          className="ml-2 underline"
-        >
-          続けて別の予約を申し込む
-        </button>
-      </div>
-    );
   }
 
   return (
@@ -73,7 +50,7 @@ export default function BookingForm({ dateKey, statuses, onSubmitted }: Props) {
       className="flex flex-col gap-4 rounded-lg border border-[color:var(--color-border)] bg-white p-4"
     >
       <h4 className="font-serif text-[color:var(--color-indigo-deep)]">
-        {date.getFullYear()}年{date.getMonth() + 1}月{date.getDate()}日の仮予約
+        {date.getFullYear()}年{date.getMonth() + 1}月{date.getDate()}日の予約・お支払い
       </h4>
 
       <div className="flex flex-col gap-2">
@@ -116,7 +93,7 @@ export default function BookingForm({ dateKey, statuses, onSubmitted }: Props) {
         </div>
         {booth && statuses[booth] === "仮予約" && (
           <p className="text-xs text-amber-700">
-            このブースはすでに仮予約が入っています。送信は可能ですが、二重予約の可能性があるためオーナーが調整のうえご連絡します。
+            このブースはすでに仮予約が入っています。お支払いは可能ですが、二重予約となった場合はオーナーが調整のうえご連絡します(返金が必要な場合があります)。
           </p>
         )}
       </div>
@@ -168,7 +145,7 @@ export default function BookingForm({ dateKey, statuses, onSubmitted }: Props) {
         disabled={submitting}
         className="rounded-md bg-[color:var(--color-indigo-deep)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        {submitting ? "送信中..." : "仮予約を申し込む"}
+        {submitting ? "決済ページへ移動中..." : "支払いに進む"}
       </button>
     </form>
   );
